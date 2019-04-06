@@ -11,28 +11,74 @@ public class ProcessScheduling {
         process_table = new ArrayList<>();
         take_input();
 
-
-        process_table.sort(Comparator.comparingInt(o -> o.arrival_time));
-
-        System.out.println("name\tAT\tBT\tCT\tWT\tTAT");
+        System.out.println("P\tAT\tBT\tCT\tWT\tTAT");
 
         int time = 0;
-        for (Block bt : process_table) {
+        process_table.sort(Comparator.comparingInt(o -> o.arrival_time));
 
-            if(time<bt.arrival_time) time = bt.arrival_time;
+        while(process_table.size()!=0) {
 
-            time = time + bt.bus_time;
-            bt.completion_time = time;
+            Block block = process_table.get(0);
+            if (time < block.arrival_time) time = block.arrival_time;
 
-            bt.tat = bt.completion_time - bt.arrival_time;
-            bt.wait_time = bt.tat - bt.bus_time;
-            System.out.println(bt.toString());
+            if(block.bus_time>3){
+                time+=3;
+                block.bus_time-=3;
+                process_table.remove(block);
+                process_table.add(block);
+            }else{
+                time = time + block.bus_time;
+
+                block.completion_time = time;
+
+                block.tat = block.completion_time - block.arrival_time;
+                block.wait_time = block.tat - block.bus_time;
+
+                System.out.println(block.toString());
+                process_table.remove(block);
+            }
+
+        }
+
+
+    }
+
+    private void fastest_first(){
+        System.out.println("P\tAT\tBT\tCT\tWT\tTAT");
+
+        int time = 0;
+        process_table.sort(Comparator.comparingInt(o -> o.arrival_time));
+
+        while(process_table.size() != 0){
+
+//            select fastest from arrived
+            Block block= null;
+            for (Block b : process_table) {
+                if (b.arrival_time <= time) {
+                    if(block==null || block.bus_time < b.bus_time){
+                        block = b;
+                    }
+                }
+            }
+
+            if (block == null) {
+                if (time < process_table.get(0).arrival_time) time = process_table.get(0).arrival_time;
+                continue;
+            }
+            time = time + block.bus_time;
+            block.completion_time = time;
+
+            block.tat = block.completion_time - block.arrival_time;
+            block.wait_time = block.tat - block.bus_time;
+            System.out.println(block.toString());
+            process_table.remove(block);
+
 
         }
 
     }
 
-    private void perform(){
+    private void fifs(){
 
         System.out.println("P\tAT\tBT\tCT\tWT\tTAT");
 
@@ -46,18 +92,18 @@ public class ProcessScheduling {
                     min_idx = i;
                 }
             }
-            Block bt = process_table.get(min_idx);
+            Block block = process_table.get(min_idx);
 
 
-            if (time < bt.arrival_time) time = bt.arrival_time;
+            if (time < block.arrival_time) time = block.arrival_time;
 
-            time = time + bt.bus_time;
-            bt.completion_time = time;
+            time = time + block.bus_time;
+            block.completion_time = time;
 
-            bt.tat = bt.completion_time - bt.arrival_time;
-            bt.wait_time = bt.tat - bt.bus_time;
+            block.tat = block.completion_time - block.arrival_time;
+            block.wait_time = block.tat - block.bus_time;
 
-            System.out.println(bt.toString());
+            System.out.println(block.toString());
 
 
             process_table.remove(min_idx);
