@@ -24,11 +24,11 @@ public class PageReplacement {
         stream = new ArrayList<>();
         frame = new Block[FRAME_SIZE];
         temp_input();
-        lru();
+        replace(false);
 
     }
 
-    private void lru(){
+    private void replace(boolean isOptimal){
 
         stream_for:
         for (int i = 0; i < stream.size(); i++) {
@@ -51,23 +51,34 @@ public class PageReplacement {
                 }
 
             }
-            // is full and not found (i.e we need to replace)
-            int min_lu_idx = frame[0].last_use_idx;
-            int min_idx = 0;
-            for (int j = 0; j < frame.length; j++) {
-                if(min_lu_idx > frame[j].last_use_idx){
-                    min_lu_idx = frame[j].last_use_idx;
-                    min_idx = j;
+            if(isOptimal){
+                int replace_close_use = 0;
+                int replace_idx = 0;
+                for (Block aFrame : frame) {
+                    int close_use = stream.size();
+                    for (int k = i; k < stream.size(); k++)
+                        if (aFrame.value.equals(stream.get(k)) && k < close_use) close_use = k;
+                    if (close_use > replace_close_use) replace_close_use = close_use;
                 }
+                frame[replace_idx] = new Block(stream.get(i),i);
+
+            }else {
+                // is full and not found (i.e we need to replace)
+                int min_lu_idx = frame[0].last_use_idx;
+                int min_idx = 0;
+                for (int j = 0; j < frame.length; j++) {
+                    if (min_lu_idx > frame[j].last_use_idx) {
+                        min_lu_idx = frame[j].last_use_idx;
+                        min_idx = j;
+                    }
+                }
+
+                frame[min_idx] = new Block(stream.get(i), i);
+                System.out.print("PH :");
+                print_frame();
+
             }
-
-            frame[min_idx] = new Block(stream.get(i),i);
-            System.out.print("PH :");
-            print_frame();
-
-
         }
-
 
     }
 
@@ -90,10 +101,5 @@ public class PageReplacement {
         }
         System.out.println(stream);
     }
-
-
-
-
-
 
 }
