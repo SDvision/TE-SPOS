@@ -10,8 +10,25 @@ public class ProcessScheduling {
     public ProcessScheduling(){
         process_table = new ArrayList<>();
         take_input();
-        perform();
-//        process_table.sort(Comparator.comparingInt(o -> o.arrival_time));
+
+
+        process_table.sort(Comparator.comparingInt(o -> o.arrival_time));
+
+        System.out.println("name\tAT\tBT\tCT\tWT\tTAT");
+
+        int time = 0;
+        for (Block bt : process_table) {
+
+            if(time<bt.arrival_time) time = bt.arrival_time;
+
+            time = time + bt.bus_time;
+            bt.completion_time = time;
+
+            bt.tat = bt.completion_time - bt.arrival_time;
+            bt.wait_time = bt.tat - bt.bus_time;
+            System.out.println(bt.toString());
+
+        }
 
     }
 
