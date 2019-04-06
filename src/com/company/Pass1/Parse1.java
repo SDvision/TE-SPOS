@@ -1,4 +1,4 @@
-package com.company;
+package com.company.Pass1;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -31,10 +31,10 @@ public class Parse1 {
     public Parse1(String path) {
         try {
             input_file = new BufferedReader(new FileReader(new File(path)));
-            intermediate_file = new PrintWriter(new File("IM.txt"));
-            symbol_table_file = new PrintWriter(new File("ST.txt"));
-            literal_table_file = new PrintWriter(new File("LT.txt"));
-            pool_table_file = new PrintWriter(new File("PT.txt"));
+            intermediate_file = new PrintWriter(new File("src/com/company/Pass1/IM.txt"));
+            symbol_table_file = new PrintWriter(new File("src/com/company/Pass1/ST.txt"));
+            literal_table_file = new PrintWriter(new File("src/com/company/Pass1/LT.txt"));
+            pool_table_file = new PrintWriter(new File("src/com/company/Pass1/PT.txt"));
 
             String line;
             while ((line = input_file.readLine()) != null) {
