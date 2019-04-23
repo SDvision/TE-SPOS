@@ -1,16 +1,18 @@
-package com.company.C;
+package com.page;
 
 import java.util.*;
 
-public class ProcessScheduling {
+public class Main{
 
 
     private ArrayList<Block> process_table;
 
-    public ProcessScheduling(){
+    public Main(){
         process_table = new ArrayList<>();
         take_input();
+    }
 
+    private void rouond_robin(){
         System.out.println("P\tAT\tBT\tCT\tWT\tTAT");
 
         int time = 0;
@@ -39,11 +41,9 @@ public class ProcessScheduling {
             }
 
         }
-
-
     }
 
-    private void fastest_first(){
+    private void sjf(){
         System.out.println("P\tAT\tBT\tCT\tWT\tTAT");
 
         int time = 0;
@@ -55,7 +55,7 @@ public class ProcessScheduling {
             Block block= null;
             for (Block b : process_table) {
                 if (b.arrival_time <= time) {
-                    if(block==null || block.bus_time < b.bus_time){
+                    if(block==null || block.bus_time > b.bus_time){
                         block = b;
                     }
                 }
@@ -78,7 +78,7 @@ public class ProcessScheduling {
 
     }
 
-    private void fifs(){
+    private void fcfs(){
 
         System.out.println("P\tAT\tBT\tCT\tWT\tTAT");
 
@@ -115,7 +115,7 @@ public class ProcessScheduling {
     private void take_input(){
         Scanner scanner = new Scanner(System.in);
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             Block block = new Block();
             System.out.println("Enter process Name :");
             block.name = scanner.nextLine();
@@ -137,6 +137,30 @@ public class ProcessScheduling {
         public String toString(){
             return name+"\t"+arrival_time+"\t"+bus_time+"\t"+completion_time+"\t"+wait_time+"\t"+tat;
         }
+    }
+
+    public static void main(String[] args)
+    {
+        Scanner sc = new Scanner(System.in);
+        Main prb = new Main();
+        String check;
+        do {
+            System.out.println("1.FCFS \n 2.SJF \n 3.Round Robin \n");
+            int c = sc.nextInt();
+            switch(c)
+            {
+                case 1:prb.fcfs();
+                break;
+                case 2: prb.sjf();
+                break;
+                case 3: prb.rouond_robin();
+                break;
+//                case 4: prb.priority();
+//                break;
+            }
+            System.out.println("Do you want to Cont ... y/s");
+            check = sc.next();
+        }while(check=="y" || check=="Y");
     }
 
 }
